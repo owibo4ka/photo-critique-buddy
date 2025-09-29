@@ -48,6 +48,8 @@ Thumbs.db
 
 # Project specific
 uploads/
+data/personal/
+models/
 *.log
 .env.local
 .env.production

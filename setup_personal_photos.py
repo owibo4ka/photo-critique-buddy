@@ -8,12 +8,16 @@ from pathlib import Path
 
 def setup_directories():
     """Create the necessary directories for personal photos"""
+    # Create directories outside the repo for privacy
+    home_dir = Path.home()
+    photo_base_dir = home_dir / "pcb-data"
+    
     directories = [
-        "data/personal/strong",
-        "data/personal/maybe", 
-        "data/personal/weak",
-        "models",
-        "uploads"
+        photo_base_dir / "personal" / "strong",
+        photo_base_dir / "personal" / "maybe", 
+        photo_base_dir / "personal" / "weak",
+        photo_base_dir / "models",
+        "uploads"  # Keep uploads in repo for temporary storage
     ]
     
     for directory in directories:
@@ -26,10 +30,13 @@ def copy_sample_photos():
     print("You can replace these with your own photos later.")
     
     # Create some placeholder files to show the structure
+    home_dir = Path.home()
+    photo_base_dir = home_dir / "pcb-data"
+    
     sample_dirs = {
-        "data/personal/strong": "Put your best photos here (portfolio-worthy)",
-        "data/personal/maybe": "Put uncertain photos here (decent but not great)",
-        "data/personal/weak": "Put photos you wouldn't show here (learning examples)"
+        photo_base_dir / "personal" / "strong": "Put your best photos here (portfolio-worthy)",
+        photo_base_dir / "personal" / "maybe": "Put uncertain photos here (decent but not great)",
+        photo_base_dir / "personal" / "weak": "Put photos you wouldn't show here (learning examples)"
     }
     
     for directory, description in sample_dirs.items():
@@ -45,17 +52,20 @@ def print_instructions():
     print("\n" + "="*60)
     print("🎯 PHOTO CRITIQUE BUDDY SETUP")
     print("="*60)
+    home_dir = Path.home()
+    photo_base_dir = home_dir / "pcb-data"
+    
     print("\n1. 📁 Directory Structure Created:")
-    print("   data/personal/strong/  - Your best photos")
-    print("   data/personal/maybe/   - Decent photos") 
-    print("   data/personal/weak/    - Photos to learn from")
-    print("   models/                - AI models will be stored here")
-    print("   uploads/               - Uploaded photos for analysis")
+    print(f"   {photo_base_dir}/personal/strong/  - Your best photos")
+    print(f"   {photo_base_dir}/personal/maybe/   - Decent photos") 
+    print(f"   {photo_base_dir}/personal/weak/    - Photos to learn from")
+    print(f"   {photo_base_dir}/models/           - AI models will be stored here")
+    print("   uploads/                            - Uploaded photos for analysis")
     
     print("\n2. 📸 Next Steps:")
-    print("   • Copy 20-50 of your BEST photos to data/personal/strong/")
-    print("   • Copy 20-50 photos you're unsure about to data/personal/maybe/")
-    print("   • Copy 20-50 photos you wouldn't show to data/personal/weak/")
+    print(f"   • Copy 20-50 of your BEST photos to {photo_base_dir}/personal/strong/")
+    print(f"   • Copy 20-50 photos you're unsure about to {photo_base_dir}/personal/maybe/")
+    print(f"   • Copy 20-50 photos you wouldn't show to {photo_base_dir}/personal/weak/")
     print("   • The more photos you add, the better the personalization!")
     
     print("\n3. 🚀 Then run your FastAPI server:")

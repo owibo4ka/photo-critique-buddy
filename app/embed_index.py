@@ -35,8 +35,13 @@ class ImageEmbedder:
             features = features / features.norm(dim=-1, keepdim=True)
             return features.cpu().numpy().astype("float32")
     
-    def build_index(self, data_dir: str = "data/personal/strong") -> None:
+    def build_index(self, data_dir: str = None) -> None:
         """Build FAISS index from personal strong photos"""
+        if data_dir is None:
+            # Use default location outside the repo
+            home_dir = Path.home()
+            data_dir = str(home_dir / "pcb-data" / "personal" / "strong")
+        
         data_path = Path(data_dir)
         if not data_path.exists():
             print(f"Warning: {data_dir} does not exist. Creating empty index.")
@@ -100,8 +105,13 @@ class ImageEmbedder:
         
         return results
     
-    def save_index(self, index_path: str = "models/faiss_index.pkl") -> None:
+    def save_index(self, index_path: str = None) -> None:
         """Save the FAISS index and image paths"""
+        if index_path is None:
+            # Use default location outside the repo
+            home_dir = Path.home()
+            index_path = str(home_dir / "pcb-data" / "models" / "faiss_index.pkl")
+        
         os.makedirs(os.path.dirname(index_path), exist_ok=True)
         
         # Save FAISS index
@@ -117,8 +127,13 @@ class ImageEmbedder:
         
         print(f"Index saved to {index_path}")
     
-    def load_index(self, index_path: str = "models/faiss_index.pkl") -> bool:
+    def load_index(self, index_path: str = None) -> bool:
         """Load the FAISS index and image paths"""
+        if index_path is None:
+            # Use default location outside the repo
+            home_dir = Path.home()
+            index_path = str(home_dir / "pcb-data" / "models" / "faiss_index.pkl")
+        
         try:
             faiss_path = index_path.replace('.pkl', '.faiss')
             

@@ -28,7 +28,8 @@ class AestheticScorer:
     
     def load_personal_taste_model(self):
         """Load or create personal taste model from strong/weak photos"""
-        taste_model_path = "models/personal_taste.pkl"
+        home_dir = Path.home()
+        taste_model_path = str(home_dir / "pcb-data" / "models" / "personal_taste.pkl")
         
         if os.path.exists(taste_model_path):
             try:
@@ -45,8 +46,9 @@ class AestheticScorer:
     
     def create_personal_taste_model(self):
         """Create personal taste model from strong/weak photo collections"""
-        strong_dir = Path("data/personal/strong")
-        weak_dir = Path("data/personal/weak")
+        home_dir = Path.home()
+        strong_dir = home_dir / "pcb-data" / "personal" / "strong"
+        weak_dir = home_dir / "pcb-data" / "personal" / "weak"
         
         if not strong_dir.exists() or not weak_dir.exists():
             print("Personal photo directories not found. Using default aesthetic scoring.")
@@ -75,9 +77,11 @@ class AestheticScorer:
             }
             
             # Save the model
-            os.makedirs("models", exist_ok=True)
+            home_dir = Path.home()
+            models_dir = home_dir / "pcb-data" / "models"
+            os.makedirs(models_dir, exist_ok=True)
             import pickle
-            with open("models/personal_taste.pkl", 'wb') as f:
+            with open(models_dir / "personal_taste.pkl", 'wb') as f:
                 pickle.dump(self.personal_taste_model, f)
             
             print(f"Personal taste model created from {len(strong_embeddings)} strong and {len(weak_embeddings)} weak photos")
