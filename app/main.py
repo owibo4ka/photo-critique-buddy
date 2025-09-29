@@ -6,6 +6,8 @@ import os
 from typing import List
 import shutil
 from pathlib import Path
+from PIL import Image
+from .analysis_pipeline import pipeline
 
 app = FastAPI(
     title="Photo Critique Buddy",
@@ -86,16 +88,32 @@ async def analyze_photo(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
-        # TODO: Add your photo analysis logic here
-        # For now, return a placeholder response
-        analysis_result = {
-            "filename": file.filename,
-            "file_size": len(file_content),
-            "content_type": file.content_type,
-            "status": "uploaded_successfully",
-            "message": "Photo uploaded successfully. Analysis coming soon!",
-            "file_path": str(file_path)
-        }
+        # Run the complete photo analysis pipeline
+        try:
+            # Load image for analysis
+            image = Image.open(file_path).convert("RGB")
+            
+            # Run analysis
+            analysis_result = pipeline.analyze_photo(image, file.filename)
+            
+            # Add file metadata
+            analysis_result.update({
+                "file_size": len(file_content),
+                "content_type": file.content_type,
+                "file_path": str(file_path),
+                "status": "analyzed_successfully"
+            })
+            
+        except Exception as analysis_error:
+            # If analysis fails, still return basic info
+            analysis_result = {
+                "filename": file.filename,
+                "file_size": len(file_content),
+                "content_type": file.content_type,
+                "status": "uploaded_but_analysis_failed",
+                "error": str(analysis_error),
+                "file_path": str(file_path)
+            }
         
         return JSONResponse(content=analysis_result)
         
